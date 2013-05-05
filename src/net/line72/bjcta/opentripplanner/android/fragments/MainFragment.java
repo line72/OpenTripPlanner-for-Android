@@ -128,6 +128,7 @@ public class MainFragment extends Fragment implements
 	Panel directionPanel;
 
 	private ImageButton btnDisplayDirection;
+	private ImageButton btnDisplayPanel;
 
 	MapOverlay startMarker;
 	MapOverlay endMarker;
@@ -204,6 +205,9 @@ public class MainFragment extends Fragment implements
 
 		btnDisplayDirection = (ImageButton) mainView
 				.findViewById(R.id.btnDisplayDirection);
+
+		btnDisplayPanel = (ImageButton) mainView
+				.findViewById(R.id.btnDisplayPanel);
 
 		googlePlacesIcon = (ImageView) mainView
 				.findViewById(R.id.googlePlacesIcon);
@@ -470,6 +474,17 @@ public class MainFragment extends Fragment implements
 			}
 		};
 		btnDisplayDirection.setOnClickListener(oclDisplayDirection);
+
+		OnClickListener oclDisplayPanel = new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				if (tripPanel.isOpen())
+					tripPanel.setOpen(false, true);
+				else
+					tripPanel.setOpen(true, true);
+			}
+		};
+		btnDisplayPanel.setOnClickListener(oclDisplayPanel);
 
 		// Do NOT show direction icon if there is no direction yet
 		if (ofl.getCurrentItinerary() == null) {

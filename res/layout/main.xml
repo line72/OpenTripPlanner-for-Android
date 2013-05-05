@@ -44,16 +44,27 @@
             android:id="@+id/subMapRelativeLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" 
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/btnDisplayDirection"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:src="@android:drawable/ic_menu_directions" />
+                android:layout_height="wrap_content" >
+
+              <ImageButton
+                  android:id="@+id/btnDisplayDirection"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:src="@drawable/direction_list" />
+
+              <ImageButton
+                  android:id="@+id/btnDisplayPanel"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:src="@drawable/panel_directions" />
+	      
+	    </LinearLayout>
 
             <ImageView
                 android:id="@+id/googlePlacesIcon"
@@ -72,11 +83,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         panel:animationDuration="1000"
-        panel:closedHandle="@android:drawable/ic_menu_myplaces"
+        panel:closedHandle="@drawable/blank"
         panel:content="@+id/panelContent"
         panel:handle="@+id/panelHandle"
         panel:linearFlying="true"
-        panel:openedHandle="@android:drawable/ic_menu_myplaces"
+        panel:openedHandle="@drawable/blank"
         panel:position="top" >
 
         <Button
