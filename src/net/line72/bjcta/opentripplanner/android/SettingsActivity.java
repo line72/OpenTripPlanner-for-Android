@@ -56,16 +56,12 @@ public class SettingsActivity extends PreferenceActivity {
 	private Preference serverRefreshButton;
 	private ListPreference geocoderProvider;
 	
-	private ServersDataSource datasource;
-
 	private final String TAG = "OTP";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setDatasource(new ServersDataSource(this));
-
 		addPreferencesFromResource(R.xml.preferences);
 
 		mapTileProvider = (ListPreference) findPreference(PREFERENCE_KEY_MAP_TILE_SOURCE);
@@ -111,27 +107,6 @@ public class SettingsActivity extends PreferenceActivity {
 
 				return true;
 			}
-		});
-		
-		ServersDataSource datasource = this.getDatasource();
-		datasource.open();
-		Date mostRecentDate = datasource.getMostRecentDate();
-		
-		datasource.close();
-	}
-
-	
-	/**
-	 * @return the datasource
-	 */
-	public ServersDataSource getDatasource() {
-		return datasource;
-	}
-
-	/**
-	 * @param datasource the datasource to set
-	 */
-	public void setDatasource(ServersDataSource datasource) {
-		this.datasource = datasource;
+		});		
 	}
 }
