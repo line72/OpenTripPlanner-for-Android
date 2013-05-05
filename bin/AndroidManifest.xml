@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.usf.cutr.opentripplanner.android"
+    package="net.line72.bjcta.opentripplanner.android"
     android:versionCode="4"
     android:versionName="1.0.3" >
 

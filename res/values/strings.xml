@@ -15,7 +15,7 @@
  the License.
 -->
 <resources>
-    <string name="app_name">OpenTripPlanner</string>
+    <string name="app_name">BJCTA Trip Planner</string>
     <string name="choose_mode">Choose a mode to travel by</string>
     <string name="choose_optimization">Choose an optimization</string>
     <string name="enable_gps">Enable GPS</string>
