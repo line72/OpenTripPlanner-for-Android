@@ -94,7 +94,7 @@ public class SettingsActivity extends PreferenceActivity {
 	        	String uriText = "mailto:"+recipient;
 	        	
 	        	String subject = "";
-	            subject += "Android OTP user report problem(s) ";
+	            subject += "Android BJCTA Trip Planner user report problem(s) ";
 	            Date d = Calendar.getInstance().getTime(); 
 	            subject += "[" + d.toString() + "]";
 	            uriText += "?subject=" + subject;

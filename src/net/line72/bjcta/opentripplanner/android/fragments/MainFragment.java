@@ -398,7 +398,7 @@ public class MainFragment extends Fragment implements
 		mv.getOverlays().add(routeOverlay);
 
 		// Hardcode our server
-		app.setSelectedServer(new Server(BJCTA_SERVER_URL));
+		app.setSelectedServer(new Server("Birmingham, AL", BJCTA_SERVER_URL, "33.355481,-86.991806,33.668354,-86.674576", "en_US", "Marcus Dillavou", "info@line72.net"));
 
 		if (prefs.getString(PREFERENCE_KEY_GEOCODER_PROVIDER, "Google Places").equals(
 				"Google Places")) {
@@ -652,7 +652,7 @@ public class MainFragment extends Fragment implements
 			}
 
 			String subject = "";
-			subject += "Android OTP user report OTP trip ";
+			subject += "Android BJCTA Trip Planner user report OTP trip ";
 			Date d = Calendar.getInstance().getTime();
 			subject += "[" + d.toString() + "]";
 			uriText += "?subject=" + subject;
