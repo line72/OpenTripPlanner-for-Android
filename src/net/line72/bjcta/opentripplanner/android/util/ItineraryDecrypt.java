@@ -17,8 +17,13 @@
 package net.line72.bjcta.opentripplanner.android.util;
 
 import java.text.DecimalFormat;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Date;
 
 import net.line72.bjcta.opentripplanner.android.R;
 
@@ -125,6 +130,29 @@ public class ItineraryDecrypt {
 
 		direction.setIcon(icon);
 
+		String sTime = leg.startTime;
+		String eTime = leg.endTime;
+
+		Calendar startTime = new GregorianCalendar();
+		Calendar endTime = new GregorianCalendar();
+		try {
+		    Date d = new Date(Long.parseLong(sTime));
+		    startTime.setTime(d);
+		} catch (NumberFormatException e) {}
+		try {
+		    Date d = new Date(Long.parseLong(eTime));
+		    endTime.setTime(d);
+		} catch (NumberFormatException e) {}
+
+		long timeDiff = endTime.getTimeInMillis() - startTime.getTimeInMillis();
+		long total_time = timeDiff / (1000 * 60); /* convert to minutes */
+		String timeStr = "";
+		if (total_time > 60) {
+		    timeStr += (int)(total_time / (60)) + " hours ";
+		    total_time = total_time % (60);
+		}
+		timeStr += total_time + " minutes";
+
 		//		Main direction
 		Place fromPlace = leg.from;
 		Place toPlace = leg.to;
@@ -136,7 +164,7 @@ public class ItineraryDecrypt {
 		double totalDistance = leg.distance;
 		DecimalFormat twoDForm = new DecimalFormat("#.##");
 		totalDistance = Double.valueOf(twoDForm.format(totalDistance));
-		mainDirectionText += "\n[" + totalDistance + "meters ]";// Double.toString(duration);
+		mainDirectionText += "\n\t" + timeStr + " [" + totalDistance + "meters ]";// Double.toString(duration);
 
 		direction.setDirectionText(mainDirectionText);
 
@@ -252,6 +280,30 @@ public class ItineraryDecrypt {
 		String boardRule = leg.boardRule;
 		String alignRule = leg.alightRule;
 
+		String sTime = leg.startTime;
+		String eTime = leg.endTime;
+
+		Calendar startTime = new GregorianCalendar();
+		Calendar endTime = new GregorianCalendar();
+		try {
+		    Date d = new Date(Long.parseLong(sTime));
+		    startTime.setTime(d);
+		} catch (NumberFormatException e) {}
+		try {
+		    Date d = new Date(Long.parseLong(eTime));
+		    endTime.setTime(d);
+		} catch (NumberFormatException e) {}
+
+		long timeDiff = endTime.getTimeInMillis() - startTime.getTimeInMillis();
+		long total_time = timeDiff / (1000 * 60); /* convert to minutes */
+		String timeStr = "";
+		if (total_time > 60) {
+		    timeStr += (int)(total_time / (60)) + " hours ";
+		    total_time = total_time % (60);
+		}
+		timeStr += total_time + " minutes";
+				 
+
 		ArrayList<Place> stopsInBetween = new ArrayList<Place>();
 		if(leg.getStop()!=null)
 			stopsInBetween.addAll(leg.getStop());
@@ -274,11 +326,18 @@ public class ItineraryDecrypt {
 		offDirection.setIcon(icon);
 
 		// Only onDirection has subdirection (list of stops in between)
-		onDirectionText += "Get on " + serviceName + " " + mode + " " + route + "\n";
-		onDirectionText += "At " + from.name + " (" + agencyAndIdFrom.getAgencyId() + " " + agencyAndIdFrom.getId() + ")\n";
-		onDirectionText += stopsInBetween.size() + " stops in between";
+		//onDirectionText += "Get on " + serviceName + " " + mode + " " + route + "\n";
+		//onDirectionText += "At " + from.name + " (" + agencyAndIdFrom.getAgencyId() + " " + agencyAndIdFrom.getId() + ")\n";
+		//onDirectionText += stopsInBetween.size() + " stops in between";
+		//onDirection.setDirectionText(onDirectionText);
+		//onDirection.setIcon(icon);
+
+		// redo of on
+		onDirectionText += mode + " " + route + "\n";
+		onDirectionText += DateFormat.getTimeInstance(DateFormat.SHORT).format(startTime.getTime()) + " Depart at " + from.name + "\n";
+		onDirectionText += "\t" + timeStr + " [" + stopsInBetween.size() + " stops]";
 		onDirection.setDirectionText(onDirectionText);
-		onDirection.setIcon(icon);
+ 		onDirection.setIcon(icon);
 
 		// sub-direction
 		ArrayList<Direction> subDirections = new ArrayList<Direction>();
