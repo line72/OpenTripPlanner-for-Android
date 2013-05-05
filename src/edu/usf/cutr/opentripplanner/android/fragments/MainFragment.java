@@ -1,3 +1,4 @@
+/* -*- Mode: java; c-basic-offset: 8; indent-tabs-mode: t -*- */
 /*
  * Copyright 2012 University of South Florida
  * 
@@ -83,7 +84,6 @@ import edu.usf.cutr.opentripplanner.android.SettingsActivity;
 import edu.usf.cutr.opentripplanner.android.listeners.OTPGeocodingListener;
 import edu.usf.cutr.opentripplanner.android.listeners.OTPGetCurrentLocationListener;
 import edu.usf.cutr.opentripplanner.android.listeners.OnFragmentListener;
-import edu.usf.cutr.opentripplanner.android.listeners.ServerSelectorCompleteListener;
 import edu.usf.cutr.opentripplanner.android.listeners.TripRequestCompleteListener;
 import edu.usf.cutr.opentripplanner.android.model.OTPBundle;
 import edu.usf.cutr.opentripplanner.android.model.OptimizeSpinnerItem;
@@ -93,7 +93,6 @@ import edu.usf.cutr.opentripplanner.android.overlays.MapOverlay;
 import edu.usf.cutr.opentripplanner.android.overlays.OTPPathOverlay;
 import edu.usf.cutr.opentripplanner.android.tasks.MetadataRequest;
 import edu.usf.cutr.opentripplanner.android.tasks.OTPGeocoding;
-import edu.usf.cutr.opentripplanner.android.tasks.ServerSelector;
 import edu.usf.cutr.opentripplanner.android.tasks.TripRequest;
 import edu.usf.cutr.opentripplanner.android.util.LocationUtil;
 import static edu.usf.cutr.opentripplanner.android.OTPApp.*;
@@ -105,7 +104,7 @@ import static edu.usf.cutr.opentripplanner.android.OTPApp.*;
  */
 
 public class MainFragment extends Fragment implements
-		OnSharedPreferenceChangeListener, ServerSelectorCompleteListener,
+		OnSharedPreferenceChangeListener,
 		TripRequestCompleteListener, OTPGetCurrentLocationListener,
 		OTPGeocodingListener {
 
@@ -398,24 +397,8 @@ public class MainFragment extends Fragment implements
 		routeOverlay = new OTPPathOverlay(Color.DKGRAY, activity);
 		mv.getOverlays().add(routeOverlay);
 
-		// TODO - fix below?
-		if (prefs.getBoolean(PREFERENCE_KEY_AUTO_DETECT_SERVER, true)) {
-			if (app.getSelectedServer() == null) {
-				processServerSelector(currentLocation, false, true);
-				// new
-				// ServerSelector((MyActivity)activity).execute(currentLocation);
-			} else {
-				Log.v(TAG, "Already selected a server!!");
-			}
-		} else {
-			String baseURL = prefs.getString(PREFERENCE_KEY_CUSTOM_SERVER_URL, "");
-			if (baseURL.length() > 5) {
-				app.setSelectedServer(new Server(baseURL));
-				Log.v(TAG, "Now using custom OTP server: " + baseURL);
-			} else {
-				// TODO - handle issue when field is cleared/blank
-			}
-		}
+		// Hardcode our server
+		app.setSelectedServer(new Server(BJCTA_SERVER_URL));
 
 		if (prefs.getString(PREFERENCE_KEY_GEOCODER_PROVIDER, "Google Places").equals(
 				"Google Places")) {
@@ -562,32 +545,6 @@ public class MainFragment extends Fragment implements
 		}
 	}
 
-	/**
-	 * Triggers the OTP server selection process.
-	 * @param mustRefreshServerList True if the app should refresh the server list by downloading from the Google Doc, false if it shoudl not
-	 */
-	public void processServerSelector(boolean mustRefreshServerList) {
-		boolean isAutoDetectEnabled = prefs.getBoolean(PREFERENCE_KEY_AUTO_DETECT_SERVER,
-				true);
-		GeoPoint currentLoc = LocationUtil.getLastLocation(this.getActivity());
-
-		processServerSelector(currentLoc, mustRefreshServerList,
-				isAutoDetectEnabled);
-	}
-
-	public void processServerSelector(GeoPoint currentLoc,
-			boolean mustRefreshServerList, boolean isAutoDetectEnabled) {
-		MyActivity myActivity = (MyActivity) this.getActivity();
-		ServerSelector selector = new ServerSelector(myActivity,
-				myActivity.getDatasource(), this, mustRefreshServerList,
-				isAutoDetectEnabled);
-		if (currentLoc == null) {
-			currentLoc = LocationUtil.getLastLocation(this.getActivity());
-		}
-
-		selector.execute(currentLoc);
-	}
-
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -595,18 +552,6 @@ public class MainFragment extends Fragment implements
 		mlo.enableCompass();
 		
 		Log.v(TAG, "MainFragment onResume");
-
-		if (needToRunAutoDetect) {
-			GeoPoint currentLoc = LocationUtil.getLastLocation(this
-					.getActivity());
-			if (currentLoc != null) {
-				Log.v(TAG, "Relaunching auto detection for server");
-					
-				processServerSelector(currentLoc, false, prefs.getBoolean(PREFERENCE_KEY_AUTO_DETECT_SERVER,
-						true));
-			}
-			needToRunAutoDetect = false;
-		}
 	}
 
 	@Override
@@ -646,27 +591,6 @@ public class MainFragment extends Fragment implements
 		if (key.equals(PREFERENCE_KEY_MAP_TILE_SOURCE)) {
 			mv.setTileSource(TileSourceFactory.getTileSource(prefs.getString(
 					PREFERENCE_KEY_MAP_TILE_SOURCE, "Mapnik")));
-		} else if (key.equals(PREFERENCE_KEY_CUSTOM_SERVER_URL)) {
-			String baseURL = prefs.getString(PREFERENCE_KEY_CUSTOM_SERVER_URL, "");
-			MyActivity myActivity = (MyActivity) this.getActivity();
-			if (baseURL.length() > 5) {
-				app.setSelectedServer(new Server(baseURL));
-				Log.v(TAG, "Now using custom OTP server: " + baseURL);
-				MetadataRequest metaRequest = new MetadataRequest(myActivity);
-				metaRequest.execute("");
-			} else {
-				// TODO - handle issue when field is cleared/blank
-			}
-		} else if (key.equals(PREFERENCE_KEY_AUTO_DETECT_SERVER)) {
-			Log.v(TAG, "Detected change in auto-detect server preference. Value is now: " + prefs.getBoolean(PREFERENCE_KEY_AUTO_DETECT_SERVER, true));
-			
-//			if (prefs.getBoolean(PREFERENCE_KEY_AUTO_DETECT_SERVER, true)) {
-//				// TODO - fix this not displaying!!
-//				needToRunAutoDetect = true;
-//			} else {
-//				needToRunAutoDetect = false;
-//			}
-			needToRunAutoDetect = true;
 		} else if (key.equals(PREFERENCE_KEY_GEOCODER_PROVIDER)) {
 			if (prefs.getString(PREFERENCE_KEY_GEOCODER_PROVIDER, "Google Places").equals(
 					"Google Places")) {
@@ -894,18 +818,6 @@ public class MainFragment extends Fragment implements
 	 */
 	public void setFragmentListener(OnFragmentListener fragmentListener) {
 		this.fragmentListener = fragmentListener;
-	}
-
-	@Override
-	public void onServerSelectorComplete(GeoPoint point, Server server) {
-		//Update application server
-		app.setSelectedServer(server);
-		Log.v(TAG, "Automatically selected server: " + server.getRegion());
-		MyActivity activity = (MyActivity) this.getActivity();
-
-		activity.zoomToLocation(point);
-		activity.setMarker(point, true);
-		activity.setMarker(point, false);
 	}
 
 	@Override

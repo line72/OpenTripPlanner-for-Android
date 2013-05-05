@@ -1,3 +1,4 @@
+/* -*- Mode: java; c-basic-offset: 8; indent-tabs-mode: t -*- */
 /*
  * Copyright 2011 Marcy Gordon
  * 
@@ -51,8 +52,6 @@ import static edu.usf.cutr.opentripplanner.android.OTPApp.*;
 public class SettingsActivity extends PreferenceActivity {
 	private ListPreference mapTileProvider;
 	private PreferenceCategory routingOptions;
-	private CheckBoxPreference autoDetectServer;
-	private EditTextPreference customServerURL;
 	private Preference providerFeedbackButton;
 	private Preference serverRefreshButton;
 	private ListPreference geocoderProvider;
@@ -72,8 +71,6 @@ public class SettingsActivity extends PreferenceActivity {
 		mapTileProvider = (ListPreference) findPreference(PREFERENCE_KEY_MAP_TILE_SOURCE);
 		geocoderProvider = (ListPreference) findPreference(PREFERENCE_KEY_GEOCODER_PROVIDER);
 		routingOptions = (PreferenceCategory) findPreference(PREFERENCE_KEY_ROUTING_OPTIONS);
-		autoDetectServer = (CheckBoxPreference) findPreference(PREFERENCE_KEY_AUTO_DETECT_SERVER);
-		customServerURL = (EditTextPreference) findPreference(PREFERENCE_KEY_CUSTOM_SERVER_URL);
 
 		ArrayList<CharSequence> names = new ArrayList<CharSequence>();
 		ArrayList<ITileSource> tiles = TileSourceFactory.getTileSources();
@@ -90,18 +87,6 @@ public class SettingsActivity extends PreferenceActivity {
 		geocoderProvider.setEntries(availableGeocoderProviders);
 		geocoderProvider.setEntryValues(availableGeocoderProviders);
 		geocoderProvider.setDefaultValue(availableGeocoderProviders[0]);
-
-		hideCustomURLPref(autoDetectServer.isChecked());
-
-		autoDetectServer.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				Boolean value = (Boolean) newValue;
-				hideCustomURLPref(value);
-				return true;
-			}
-		});
 
 		providerFeedbackButton = (Preference)findPreference(PREFERENCE_KEY_OTP_PROVIDER_FEEDBACK);
 		providerFeedbackButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -132,36 +117,9 @@ public class SettingsActivity extends PreferenceActivity {
 		datasource.open();
 		Date mostRecentDate = datasource.getMostRecentDate();
 		
-		serverRefreshButton = (Preference)findPreference(PREFERENCE_KEY_REFRESH_SERVER_LIST);
-		
-		if(mostRecentDate != null){
-			serverRefreshButton.setSummary("Server List Downloaded on "+mostRecentDate.toString());
-		}else{
-			serverRefreshButton.setSummary("Last Server List Download Unknown");
-		}
-		
-		serverRefreshButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference arg0) {
-				Log.v(TAG, "Server Refresh Button clicked");
-				Intent returnIntent = new Intent();
-				returnIntent.putExtra(OTPApp.REFRESH_SERVER_RETURN_KEY, true);
-				setResult(RESULT_OK, returnIntent);
-				finish();
-				return true;
-			}
-		});
-		
 		datasource.close();
 	}
 
-	private void hideCustomURLPref(Boolean hidePref) {
-		if(!hidePref) {
-			routingOptions.addItemFromInflater(customServerURL);
-		} else if (hidePref) {
-			routingOptions.removePreference(customServerURL);
-		}
-	}
 	
 	/**
 	 * @return the datasource

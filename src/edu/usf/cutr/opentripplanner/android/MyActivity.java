@@ -1,3 +1,4 @@
+/* -*- Mode: java; c-basic-offset: 8; indent-tabs-mode: t -*- */
 /*
  * Copyright 2012 University of South Florida
  * 
@@ -90,14 +91,7 @@ public class MyActivity extends FragmentActivity implements OnFragmentListener{
 	{
 		switch(requestCode) {
 		case OTPApp.REFRESH_SERVER_LIST_REQUEST_CODE: 
-			if (resultCode == RESULT_OK) {
-				boolean shouldRefresh = data.getBooleanExtra(OTPApp.REFRESH_SERVER_RETURN_KEY, false);
-				//				Toast.makeText(this, "Should server list refresh? " + shouldRefresh, Toast.LENGTH_LONG).show();
-				if(shouldRefresh){
-					mainFragment.processServerSelector(true);
-				}
-				break;
-			}
+			break;
 		case OTPApp.CHOOSE_CONTACT_REQUEST_CODE:
 			if(resultCode == RESULT_OK){
 //				Log.v(TAG, "CHOOSE CONTACT RESULT OK");

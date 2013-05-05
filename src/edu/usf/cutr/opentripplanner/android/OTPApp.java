@@ -1,3 +1,4 @@
+/* -*- Mode: java; c-basic-offset: 8; indent-tabs-mode: t -*- */
 /*
  * Copyright 2011 Marcy Gordon
  * 
@@ -41,9 +42,10 @@ public class OTPApp extends Application {
 	public static final String PREFERENCE_KEY_MAP_TILE_SOURCE = "map_tile_source";
 	public static final String PREFERENCE_KEY_GEOCODER_PROVIDER = "geocoder_provider";
 	public static final String PREFERENCE_KEY_ROUTING_OPTIONS = "routing_options";
-	public static final String PREFERENCE_KEY_AUTO_DETECT_SERVER = "auto_detect_server";
-	public static final String PREFERENCE_KEY_CUSTOM_SERVER_URL = "custom_server_url";
-	public static final String PREFERENCE_KEY_REFRESH_SERVER_LIST = "refresh_server_list";
+	//public static final String PREFERENCE_KEY_AUTO_DETECT_SERVER = "auto_detect_server";
+	//public static final String PREFERENCE_KEY_CUSTOM_SERVER_URL = "custom_server_url";
+	//public static final String PREFERENCE_KEY_REFRESH_SERVER_LIST = "refresh_server_list";
+	public static final String BJCTA_SERVER_URL = "http://tripplanner.line72.net:8080/opentripplanner-api-webapp/ws";
 	public static final String PREFERENCE_KEY_OTP_PROVIDER_FEEDBACK = "otp_provider_feedback";
 	public static final String PREFERENCE_KEY_MAX_WALKING_DISTANCE = "max_walking_distance";
 	public static final String PREFERENCE_KEY_WHEEL_ACCESSIBLE = "wheelchair_accessible";
