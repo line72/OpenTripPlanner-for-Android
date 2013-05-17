@@ -166,23 +166,14 @@ public class OTPGeocoding extends AsyncTask<String, Integer, Long> {
 		HashMap<String, String> params = new HashMap<String, String>();
 		Places p;
 
-		if(placesService.equals("Google Places")){
-			params.put(GooglePlaces.PARAM_LOCATION, Double.toString(selectedServer.getCenterLatitude()) + "," + Double.toString(selectedServer.getCenterLongitude()));
-			params.put(GooglePlaces.PARAM_RADIUS, Double.toString(selectedServer.getRadius()));
-			params.put(GooglePlaces.PARAM_NAME, name);
-
-			p = new GooglePlaces(getKeyFromResource());
-
-			Log.v(TAG, "Using Google Places!");
-		} else {
-			params.put(Nominatim.PARAM_NAME, name);
-			p = new Nominatim(selectedServer.getLowerLeftLongitude(), 
-					selectedServer.getLowerLeftLatitude(),
-					selectedServer.getUpperRightLongitude(), 
-					selectedServer.getUpperRightLatitude());
-
-			Log.v(TAG, "Using Nominatim!");
-		}
+		// !mwd - default to using google places
+		params.put(GooglePlaces.PARAM_LOCATION, Double.toString(selectedServer.getCenterLatitude()) + "," + Double.toString(selectedServer.getCenterLongitude()));
+		params.put(GooglePlaces.PARAM_RADIUS, Double.toString(selectedServer.getRadius()));
+		params.put(GooglePlaces.PARAM_NAME, name);
+		
+		p = new GooglePlaces(getKeyFromResource());
+		
+		Log.v(TAG, "Using Google Places!");
 
 		ArrayList<POI> pois = new ArrayList<POI>();
 		pois.addAll(p.getPlaces(params));

@@ -48,7 +48,6 @@
     <string name="geocoder_preference_provider_title">Geocoder Provider</string>
     <string name="geocoder_preference_provider_summary">Select a provider for use in geocoder</string>
     <string-array name="available_geocoder_providers">
-        <item>MapQuest Nominatim</item>
         <item>Google Places</item>
     </string-array>
 </resources>
