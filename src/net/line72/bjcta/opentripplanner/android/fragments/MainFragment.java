@@ -146,7 +146,7 @@ public class MainFragment extends Fragment implements
 
 	private OnFragmentListener fragmentListener;
 
-	private final GeoPoint defaultCenterLocation = new GeoPoint(40.5, -100);
+	private final GeoPoint defaultCenterLocation = new GeoPoint(33.511925,-86.808826); // central station
 
 	private final int defaultInitialZoomLevel = 12;
 
